@@ -1,0 +1,6 @@
+rigs:
+- name: FT-710
+  address: 127.0.0.1:4532
+wavelog:
+  address: my.wavelog.com:3000
+  token: SOME-WAVELOG-TOKEN
