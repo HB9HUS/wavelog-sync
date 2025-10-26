@@ -1,10 +1,12 @@
+use crate::types::RigInfo;
 use std::io::{self, BufRead, BufReader, Write};
 use std::net::TcpStream;
 use std::str;
+use std::sync::mpsc::Sender;
 use std::thread;
 use std::time::{Duration, Instant};
 
-pub fn fetch(address: &str) -> Result<String, String> {
+pub fn fetch(address: &str, tx: Sender<RigInfo>) -> Result<String, String> {
     let mut stream = TcpStream::connect(address).map_err(|e| format!("connect failed: {e}"))?;
     stream
         .set_read_timeout(Some(Duration::from_millis(900)))
@@ -13,31 +15,30 @@ pub fn fetch(address: &str) -> Result<String, String> {
         .set_write_timeout(Some(Duration::from_millis(900)))
         .map_err(|e| format!("set_write_timeout failed: {e}"))?;
 
-    let intervall = Duration::from_secs(10);
+    let interval = Duration::from_secs(10);
     loop {
         let start = Instant::now();
 
-        match get_frequency(&mut stream) {
-            Ok(f) => {
-                println!("got frequency: {}", f)
+        let res = (get_frequency(&mut stream), get_mode(&mut stream));
+        match res {
+            (Ok(f), Ok(m)) => {
+                let msg = RigInfo { freq: f, mode: m };
+                if let Err(e) = tx.send(msg) {
+                    return Err(format!("connection closed: {}", e));
+                };
             }
-            Err(e) => {
-                eprintln!("could not read frequency! {}", e);
+            (_, _) => {
+                if let Err(e) = res.0 {
+                    eprintln!("could not read freq! {}", e);
+                }
+                if let Err(e) = res.1 {
+                    eprintln!("could not read mode! {}", e);
+                }
             }
         }
 
-        match get_mode(&mut stream) {
-            Ok(f) => {
-                println!("got mode: {}", f)
-            }
-            Err(e) => {
-                eprintln!("could not read mode! {}", e);
-            }
-        }
-
-        let elapsed = start.elapsed();
-        if elapsed < intervall {
-            thread::sleep(intervall - elapsed);
+        if let Some(rem) = interval.checked_sub(start.elapsed()) {
+            thread::sleep(rem);
         }
     }
 }
