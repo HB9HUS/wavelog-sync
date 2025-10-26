@@ -15,6 +15,31 @@ This enables Wavelog to display your active band and mode in real time.
 
 ---
 
+## Installation
+
+prerequisites:
+* Linux with systemd
+* Rust toolchain with Cargo
+* hamlib with rigctld
+* A Wavelog API token and API URL from your instance
+
+build from source:
+```
+git clone https://github.com/HB9HUS/wavelog-sync.git
+cd wavelog-sync
+
+cargo build --release
+
+sudo install -m 0755 target/release/wavelog-sync /usr/local/bin/wavelog-sync
+```
+
+create config file:
+```
+sudo mkdir -p /etc/wavelog-sync
+sudo cp config.yaml /etc/wavelog-sync/config.yaml
+sudo chmod 640 /etc/wavelog-sync/config.yaml
+```
+
 ## Configuration
 
 The configuration file (`config.yaml` or `-c myconfig.yaml`) defines your rigs and Wavelog connection:
