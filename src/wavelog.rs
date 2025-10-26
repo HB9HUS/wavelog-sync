@@ -1,8 +1,7 @@
-use crate::tcp::get_response;
-use crate::tcp::setup_stream;
 use crate::types::RigInfo;
 use chrono::Utc;
 use std::str;
+use ureq::post;
 
 use serde::Serialize;
 
@@ -35,6 +34,12 @@ pub fn send(address: &str, token: &str, rig_info: RigInfo) -> Result<String, Str
 
     let json = serde_json::to_string(&payload).map_err(|e| e.to_string())?;
     println!("json={}", json);
-    let mut stream = setup_stream(address)?;
-    get_response(&mut stream, json.as_str())
+    let _ = post(address)
+        //.header("Content-Type", "application/json")
+        .send(&json)
+        .map_err(|e| e.to_string())?
+        .body_mut()
+        .read_to_string()
+        .map_err(|e| e.to_string())?;
+    Ok(format!("ok"))
 }

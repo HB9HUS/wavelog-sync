@@ -10,7 +10,7 @@ use std::time::{Duration, Instant};
 pub fn fetch(name: String, address: &str, tx: Sender<RigInfo>) -> Result<String, String> {
     let mut stream = setup_stream(address)?;
 
-    let interval = Duration::from_secs(10);
+    let interval = Duration::from_secs(1);
     loop {
         let start = Instant::now();
 

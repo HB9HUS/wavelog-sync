@@ -1,6 +1,6 @@
 rigs:
-- name: FT-710
+- name: FT710
   address: 127.0.0.1:4532
 wavelog:
-  address: my.wavelog.com:3000
-  token: SOME-WAVELOG-TOKEN
+  address: https://log.mydomain.com/index.php/api/radio
+  token: kaldalalalalala

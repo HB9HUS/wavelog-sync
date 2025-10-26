@@ -26,7 +26,7 @@ rigs:
   - name: IC9700
     address: 127.0.0.1:12346
 wavelog:
-  address: my.wavelog.com:3000
+  address: https://log.mydomain.com/index.php/api/radio
   token: YOUR-WAVELOG-TOKEN
 ```
 
