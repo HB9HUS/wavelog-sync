@@ -1,8 +1,7 @@
 # wavelog-sync
 
 ## Overview
-`wavelog-sync` connects to one or more radios through `rigctld` and forwards live frequency and mode data to a [Wavelog](https://github.com/wavelog/wavelog) instance.  
-It is designed for unattended operation on Linux systems and can be run manually or as a system service.
+`wavelog-sync` connects to one or more radios through [rigctld](https://hamlib.sourceforge.net/html/rigctld.1.html) and forwards live frequency and mode data to a [Wavelog](https://github.com/wavelog/wavelog) instance.
 
 ---
 
@@ -18,7 +17,7 @@ This enables Wavelog to display your active band and mode in real time.
 ## Installation
 
 prerequisites:
-* Linux with systemd
+* Linux with systemd (or windows/macos but no instructions provided for these)
 * Rust toolchain with Cargo
 * hamlib with rigctld
 * A Wavelog API token and API URL from your instance
