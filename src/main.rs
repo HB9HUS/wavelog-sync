@@ -3,15 +3,27 @@ mod rigctl;
 mod wavelog;
 
 use crate::config::load_config;
+use clap::Parser;
+use std::path::PathBuf;
 use std::process;
 use std::sync::mpsc;
 use std::thread;
+
+#[derive(Parser, Debug)]
+#[command(name = "myapp", version, about = "Example app")]
+struct Cli {
+    /// Path to config file
+    #[arg(short = 'c', long = "config", default_value = "config.yaml")]
+    config: PathBuf,
+}
 
 pub mod tcp;
 pub mod types;
 
 fn main() {
-    let cfg = match load_config("config.yaml") {
+    let cli = Cli::parse();
+
+    let cfg = match load_config(cli.config) {
         Ok(cfg) => cfg,
         Err(e) => {
             eprintln!("could not load config: {}", e);

@@ -17,7 +17,7 @@ This enables Wavelog to display your active band and mode in real time.
 
 ## Configuration
 
-The configuration file (`config.yaml`) defines your rigs and Wavelog connection:
+The configuration file (`config.yaml` or `-c myconfig.yaml`) defines your rigs and Wavelog connection:
 
 ```yaml
 rigs:
