@@ -8,6 +8,7 @@ use std::path::PathBuf;
 use std::process;
 use std::sync::mpsc;
 use std::thread;
+use std::time::Duration;
 
 #[derive(Parser, Debug)]
 #[command(name = "myapp", version, about = "Example app")]
@@ -45,6 +46,7 @@ fn main() {
                 if let Err(e) = rigctl::fetch(&name, &address, &tx) {
                     eprintln!("fetch error, trying again: {}", e);
                 }
+                thread::sleep(Duration::from_secs(10));
             }
         });
         handles.push(handle);
