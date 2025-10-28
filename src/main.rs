@@ -41,9 +41,9 @@ fn main() {
             let tx = tx.clone();
             let name = r.name.clone();
             let address = r.address.clone();
-            move || {
-                if let Err(e) = rigctl::fetch(name, &address, tx) {
-                    eprintln!("fetch error: {}", e);
+            move || loop {
+                if let Err(e) = rigctl::fetch(&name, &address, &tx) {
+                    eprintln!("fetch error, trying again: {}", e);
                 }
             }
         });
