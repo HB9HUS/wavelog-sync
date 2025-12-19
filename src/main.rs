@@ -4,6 +4,8 @@ mod wavelog;
 
 use crate::config::load_config;
 use clap::Parser;
+use env_logger;
+use log::{error, warn};
 use std::path::PathBuf;
 use std::process;
 use std::sync::mpsc;
@@ -24,10 +26,12 @@ pub mod types;
 fn main() {
     let cli = Cli::parse();
 
+    env_logger::init();
+
     let cfg = match load_config(cli.config) {
         Ok(cfg) => cfg,
         Err(e) => {
-            eprintln!("could not load config: {}", e);
+            error!("could not load config: {}", e);
             process::exit(1)
         }
     };
@@ -42,7 +46,7 @@ fn main() {
             let tx = tx.clone();
             move || loop {
                 if let Err(e) = rigctl::fetch(&r, &tx) {
-                    eprintln!("fetch error, trying again: {}", e);
+                    warn!("fetch error {e}, trying again");
                 }
                 thread::sleep(Duration::from_secs(10));
             }
@@ -52,7 +56,7 @@ fn main() {
     drop(tx);
     for info in rx {
         if let Err(e) = wavelog::send(&wavelog_address, &token, info) {
-            eprintln!("could not send to wavelog: {}", e);
+            warn!("could not send to wavelog: {}", e);
         }
     }
 

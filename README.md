@@ -47,14 +47,21 @@ The configuration file (`config.yaml` or `-c myconfig.yaml`) defines your rigs a
 rigs:
   - name: FTDX10
     address: 127.0.0.1:12345
+    power_scale: 100
+    send_power: true
   - name: IC9700
     address: 127.0.0.1:12346
+    power_scale: 100
+    send_power: false
 wavelog:
   address: https://log.mydomain.com/index.php/api/radio
   token: YOUR-WAVELOG-TOKEN
 ```
 
 You have to create a token in your wavelog instance.
+
+If you need more logging, call with RUST_LOG=LEVEL (error|warn|info|debug)
+    RUST_LOG=debug wavelog-sync -c myconfig.yaml
 
 ## Running as a service (systemd)
 

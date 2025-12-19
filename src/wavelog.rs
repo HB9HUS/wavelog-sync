@@ -1,5 +1,6 @@
 use crate::types::RigInfo;
 use chrono::Utc;
+use log::debug;
 use std::str;
 use ureq::post;
 
@@ -33,7 +34,7 @@ pub fn send(address: &str, token: &str, rig_info: RigInfo) -> Result<String, Str
     };
 
     let json = serde_json::to_string(&payload).map_err(|e| e.to_string())?;
-    println!("json={}", json);
+    debug!("json={}", json);
     let _ = post(address)
         //.header("Content-Type", "application/json")
         .send(&json)

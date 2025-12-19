@@ -1,6 +1,11 @@
 rigs:
 - name: FT710
   address: 127.0.0.1:4532
+  # scale the power read from rigctl by this factor
+  # rigctl sends a value from 0.0..1.0
+  power_scale: 100
+  # enable power sending, not all rigs can send power
+  send_power: true
 wavelog:
   address: https://log.mydomain.com/index.php/api/radio
   token: kaldalalalalala
