@@ -37,13 +37,11 @@ fn main() {
     let mut handles = Vec::new();
 
     let (tx, rx) = mpsc::channel::<types::RigInfo>();
-    for r in &cfg.rigs {
+    for r in cfg.rigs {
         let handle = thread::spawn({
             let tx = tx.clone();
-            let name = r.name.clone();
-            let address = r.address.clone();
             move || loop {
-                if let Err(e) = rigctl::fetch(&name, &address, &tx) {
+                if let Err(e) = rigctl::fetch(&r, &tx) {
                     eprintln!("fetch error, trying again: {}", e);
                 }
                 thread::sleep(Duration::from_secs(10));

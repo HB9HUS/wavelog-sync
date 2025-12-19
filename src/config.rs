@@ -11,6 +11,8 @@ pub struct Config {
 pub struct Rig {
     pub name: String,
     pub address: String, // keep as String; parse later if needed
+    pub power_scale: u64,
+    pub send_power: bool,
 }
 
 #[derive(Debug, Deserialize)]

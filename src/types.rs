@@ -3,4 +3,5 @@ pub struct RigInfo {
     pub name: String,
     pub freq: u64,
     pub mode: String,
+    pub power: Option<u64>,
 }

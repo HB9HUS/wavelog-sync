@@ -28,7 +28,7 @@ pub fn send(address: &str, token: &str, rig_info: RigInfo) -> Result<String, Str
         radio_id: rig_info.name,
         freq_hz: rig_info.freq,
         mode: rig_info.mode,
-        power: None, // omitted from JSON
+        power: rig_info.power,
         timestamp: timestamp,
     };
 
