@@ -65,6 +65,11 @@ If you need more logging, call with RUST_LOG=LEVEL (error|warn|info|debug)
 
 ## Running as a service (systemd)
 
+create a user (add to dialout group to allow access to devices):
+```
+  sudo useradd -r -G dialout -s /usr/sbin/nologin rigctl
+```
+
 Create a service file: /etc/systemd/system/wavelog-sync.service
 
 ```
@@ -139,3 +144,36 @@ and then:
 ```
 
 Then you have specific devices for your radios such as /dev/ftdx10 that you can use in the rigctld config.
+
+## Automatically Start/Stop services [Optional]
+
+I recommend to disable rigctld when no rig is present in the system. You can detect this over one of the devices the rig provides. As tty devices sometimes still exist when the device is turned off (observed with Yaesu rigs), it is better to take a high level device such as the Audio Device.
+
+Find it with lsusb:
+```
+  lsusb
+
+  Bus 003 Device 028: ID 0d8c:0013 C-Media Electronics, Inc. USB Audio Device
+```
+
+and create a udev rule that creates a device and starts the service.
+```
+  SUBSYSTEM=="usb", ATTRS{idVendor}=="0d8c", ATTRS{idProduct}=="0013", TAG+="systemd", SYMLINK+="rig_audio_present", ENV{SYSTEMD_WANTS}="rigctld-ic710.service"
+
+```
+
+Update the service description to use the new device:
+```
+  [Unit]
+  Description=rigctld for FT-710
+  After=network.target
+  BindsTo=dev-rig_audio_present.device
+  After=dev-rig_audio_present.device
+
+  ...
+```
+
+### Background info
+rigctld can not realiably detect if a rig is connected or powered. In some situation in generates unwanted output which can be sent to wavelog. wavelog-sync tries to detect this but it is recommended to only turn on rigctld when the rig is connected.
+
+Some rigs have their USB controller powered over USB and not the rig itself. This leads to the situation, that the devices ttyUSB0 etc. are still present in the system even when turned off. To detect this, you can try to see a higher-level device such as the Audio device. As the audio codec seems to get it's power from the rig and not the USB controller, this device disappears when the rig is turned off.
