@@ -13,7 +13,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
 
     let interval = Duration::from_millis(300);
     let mut last_freq = 0;
-    let mut last_mode = "".to_string();
+    let mut last_mode = String::new();
     let mut last_pwr = None;
     let mut err_count = 0;
     loop {
@@ -29,7 +29,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_freq = match get_frequency(&mut stream) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read freq! {}", e);
+                warn!("could not read freq! {e}");
                 err_count += 1;
                 continue;
             }
@@ -38,7 +38,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_mode = match get_mode(&mut stream) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read mode! {}", e);
+                warn!("could not read mode! {e}");
                 err_count += 1;
                 continue;
             }
@@ -47,12 +47,12 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_pwr = match get_power(&mut stream, r.power_scale, r.send_power) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read power! {}", e);
+                warn!("could not read power! {e}");
                 err_count += 1;
                 continue;
             }
         };
-        debug!("got pwr {:?}", new_pwr);
+        debug!("got pwr {new_pwr:?}");
         if last_freq != new_freq || last_mode != new_mode || last_pwr != new_pwr {
             last_freq = new_freq;
             last_mode = new_mode.clone();

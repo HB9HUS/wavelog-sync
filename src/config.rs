@@ -23,6 +23,6 @@ pub struct Wavelog {
 
 pub fn load_config<P: AsRef<Path>>(path: P) -> Result<Config, String> {
     let text = fs::read_to_string(path).map_err(|e| e.to_string())?;
-    let cfg: Config = serde_yaml::from_str(&text).map_err(|e| e.to_string())?;
+    let cfg: Config = yaml_serde::from_str(&text).map_err(|e| e.to_string())?;
     Ok(cfg)
 }
