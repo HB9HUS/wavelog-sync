@@ -25,7 +25,10 @@ pub fn get_response(stream: &mut TcpStream, message: &str) -> Result<String, Str
     match reader.read_line(&mut line) {
         Ok(0) => Err("server closed connection".into()),
         Ok(_) => Ok(line),
-        Err(e) if e.kind() == io::ErrorKind::TimedOut => Err(format!("read timed out")),
+        // on Linux a read timeout surfaces as WouldBlock (EAGAIN), not TimedOut
+        Err(e) if e.kind() == io::ErrorKind::TimedOut || e.kind() == io::ErrorKind::WouldBlock => {
+            Err("read timed out".to_string())
+        }
         Err(e) => Err(format!("unexpected error {}", e)),
     }
 }

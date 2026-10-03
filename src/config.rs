@@ -11,8 +11,14 @@ pub struct Config {
 pub struct Rig {
     pub name: String,
     pub address: String, // keep as String; parse later if needed
+    #[serde(default = "default_power_scale")]
     pub power_scale: u64,
+    #[serde(default)]
     pub send_power: bool,
+}
+
+fn default_power_scale() -> u64 {
+    1
 }
 
 #[derive(Debug, Deserialize)]

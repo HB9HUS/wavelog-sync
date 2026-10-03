@@ -2,7 +2,7 @@ use crate::config;
 use crate::tcp::get_response;
 use crate::tcp::setup_stream;
 use crate::types::RigInfo;
-use log::{debug, warn};
+use log::debug;
 use std::net::TcpStream;
 use std::sync::mpsc::Sender;
 use std::thread;
@@ -29,7 +29,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_freq = match get_frequency(&mut stream) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read freq! {e}");
+                debug!("could not read freq! {e}");
                 err_count += 1;
                 continue;
             }
@@ -38,7 +38,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_mode = match get_mode(&mut stream) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read mode! {e}");
+                debug!("could not read mode! {e}");
                 err_count += 1;
                 continue;
             }
@@ -47,7 +47,7 @@ pub fn fetch(r: &config::Rig, tx: &Sender<RigInfo>) -> Result<String, String> {
         let new_pwr = match get_power(&mut stream, r.power_scale, r.send_power) {
             Ok(f) => f,
             Err(e) => {
-                warn!("could not read power! {e}");
+                debug!("could not read power! {e}");
                 err_count += 1;
                 continue;
             }
