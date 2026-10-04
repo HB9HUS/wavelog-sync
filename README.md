@@ -54,11 +54,11 @@ rigs:
     power_scale: 100
     send_power: false
 wavelog:
-  address: https://log.mydomain.com/index.php/api/radio
-  token: YOUR-WAVELOG-TOKEN
+  address: https://log.mydomain.com/index.php/api/v2/radio
+  token: YOUR-WAVELOG-V2-TOKEN
 ```
 
-You have to create a token in your wavelog instance.
+`wavelog-sync` uses Wavelog's [API v2](https://docs.wavelog.org/developer/api-v2/) radio resource, which requires Wavelog 3.1.0 or later. Create a token under Admin -> API with the `radio:write` scope; v2 tokens start with `wl2_` and are not interchangeable with the older v1 API keys.
 
 If you need more logging, call with RUST_LOG=LEVEL (error|warn|info|debug)
     RUST_LOG=debug wavelog-sync -c myconfig.yaml

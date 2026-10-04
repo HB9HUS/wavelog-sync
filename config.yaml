@@ -7,5 +7,7 @@ rigs:
   # enable power sending, not all rigs can send power
   send_power: true
 wavelog:
-  address: https://log.mydomain.com/index.php/api/radio
-  token: kaldalalalalala
+  address: https://log.mydomain.com/index.php/api/v2/radio
+  # a v2 API token (starts with wl2_), generated under Admin -> API in Wavelog.
+  # v1 tokens are not accepted on the v2 endpoint.
+  token: wl2_YOUR-WAVELOG-V2-TOKEN
